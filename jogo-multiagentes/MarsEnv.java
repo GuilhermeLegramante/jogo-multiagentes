@@ -109,7 +109,7 @@ public class MarsEnv extends Environment {
         updatePercepts();
 
         try {
-            Thread.sleep(200);
+            Thread.sleep(50);
         } catch (Exception e) {}
         informAgsEnvironmentChanged();
         return true;
@@ -242,10 +242,9 @@ public class MarsEnv extends Environment {
 			if (incendiario.y == getHeight()) {
 					incendiario.y = 0;
 					incendiario.x--;
-			}
-			
+			}		
 			setAgPos(2, incendiario);
-			setAgPos(2, getAgPos(2)); // apenas para desenhá-lo na vista
+			setAgPos(2, getAgPos(2)); // apenas para desenhá-lo na vista		
 		}
 		
 		void caminharCivil() throws Exception{
@@ -280,15 +279,15 @@ public class MarsEnv extends Environment {
 		}
 
 		void prenderIncendiario(){
-			System.out.println("Prendeu Incendiário!");
+			System.out.println("Prendeu o Incendiário!");
 		}
 		
 		void chamarPolicial(){
-			System.out.println("Chamou Policial!");
+			System.out.println("Chamou o Policial!");
 		}
 
 		void chamarBombeiro(){
-			System.out.println("Chamouo Bombeiro!");
+			System.out.println("Chamou o Bombeiro!");
 		}
 		
 		void civilFogo(){
