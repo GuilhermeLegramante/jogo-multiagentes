@@ -213,16 +213,25 @@ public class MarsEnv extends Environment {
 
 		void caminharIncendiario() throws Exception{
 			Location incendiario = getAgPos(2);
-			incendiario.x++;
+			Random n = new Random();
+			int direcao = n.nextInt(2);
+			
+			if(direcao == 0){
+				incendiario.x++;
+			}
+			
+			if(direcao == 1){
+				incendiario.y++;
+			}
 			
 			if (incendiario.x == getWidth()) {
 					incendiario.x = 0;
-					incendiario.y++;		
+					incendiario.y--;		
 			}
 			
-			if (incendiario.x == getHeight()) {
-					incendiario.y++;
-					return;
+			if (incendiario.y == getHeight()) {
+					incendiario.y = 0;
+					incendiario.x--;
 			}
 			
 			setAgPos(2, incendiario);
@@ -248,6 +257,11 @@ public class MarsEnv extends Environment {
 		
 		void atearFogo(){
 			System.out.println("Ateou Fogo!");
+			Random n = new Random();
+			if(n.nextInt(6) == 5){
+				add(GARB, getAgPos(2));
+			}
+			
 		}
 		
 		void apagarFogo(){

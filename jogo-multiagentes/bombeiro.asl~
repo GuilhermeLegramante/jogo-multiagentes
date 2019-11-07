@@ -10,7 +10,7 @@
 +!andar.
 
 +!apagarIncendio <-
-	apagarFogo;
+	apagarIncendio;
 	!apagarIncendio.
 +!apagarIncendio.
 
