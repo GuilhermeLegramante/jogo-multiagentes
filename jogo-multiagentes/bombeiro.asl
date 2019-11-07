@@ -1,8 +1,9 @@
 //Bombeiro
 
 !andar.
-!apagarIncendio.
-!chamarPolicial.
+!apagarIncendioCivil.
+!apagarIncendioBombeiro.
+!apagarIncendioPolicial.
 
 +!andar <-
 	.wait(50)
@@ -10,13 +11,11 @@
 	!andar.
 +!andar.
 
-+!apagarIncendio <-
++!apagarIncendioBombeiro <-
 	apagarFogo;
-	!apagarIncendio.
-+!apagarIncendio.
+	!apagarIncendioBombeiro.
++!apagarIncendioBombeiro.
 
-+!chamarPolicial <-
-	chamarPolicial;
-	!chamarPolicial.
-+!chamarPolicial.
++bombeiroIncendiario : true <- chamarPolicia.
+
 

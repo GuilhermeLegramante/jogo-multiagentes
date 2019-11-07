@@ -4,6 +4,7 @@
 !atearFogo.
 
 +!andar <-
+	.wait(200)
 	caminharIncendiario;
 	!andar.
 +!andar.

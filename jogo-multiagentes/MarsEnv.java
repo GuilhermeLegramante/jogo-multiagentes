@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.util.Random;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class MarsEnv extends Environment {
 
@@ -133,7 +134,7 @@ public class MarsEnv extends Environment {
         addPercept(posicaoPolicial);
 		addPercept(posicaoIncendiario);
 		addPercept(posicaoCivil);
-		
+				
         if (model.hasObject(GARB, civilLoc)) {
             addPercept(civilFogo);
         }
@@ -143,6 +144,10 @@ public class MarsEnv extends Environment {
 		if (model.hasObject(GARB, bombeiroLoc)) {
             addPercept(bombeiroFogo);
         }
+		
+		if ((policialLoc.x == incendiarioLoc.x) && (policialLoc.y == incendiarioLoc.y)){
+			addPercept(policialIncendiario);
+		}
 				
     }
 
@@ -162,7 +167,7 @@ public class MarsEnv extends Environment {
 				Location bombeiroLoc = new Location(0, 1);
 				setAgPos(0, bombeiroLoc);
 								
-                Location policialLoc = new Location(0, 2);
+                Location policialLoc = new Location(10, 6);
                 setAgPos(1, policialLoc);
 				
 				Location incendiarioLoc = new Location(0, 3);
@@ -205,6 +210,7 @@ public class MarsEnv extends Environment {
 
 		void caminharPolicial() throws Exception{
 			Location policial = getAgPos(1);
+			Location incendiario = getAgPos(2);
 			Random n = new Random();
 			int direcao = n.nextInt(2);
 			
@@ -224,7 +230,7 @@ public class MarsEnv extends Environment {
 			if (policial.y == getHeight()) {
 					policial.y = 0;
 					policial.x--;
-			}		
+			}	
 			setAgPos(1, policial);
 			setAgPos(1, getAgPos(1)); // apenas para desenhá-lo na vista			
 		}
@@ -285,8 +291,11 @@ public class MarsEnv extends Environment {
 			remove(GARB, getAgPos(0));
 		}
 
-		void prenderIncendiario(){
+		void prenderIncendiario()throws Exception{
 			System.out.println("Prendeu o Incendiário!");
+			JOptionPane.showMessageDialog(null, "INCENDIÁRIO CAPTURADO!!");
+			model.remove(GARB, getAgPos(2));
+			System.exit(0);
 		}
 		
 		void chamarPolicial(){
@@ -313,7 +322,7 @@ public class MarsEnv extends Environment {
 			System.out.println("Civil percebeu incendiário!");
 		}
 
-		void policialIncendiario(){
+		void policialIncendiario()throws Exception{	
 			System.out.println("Policial percebeu incendiário!");
 		}
 

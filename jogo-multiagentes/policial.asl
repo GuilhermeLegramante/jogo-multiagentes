@@ -1,21 +1,15 @@
 // Policial 
 
-!andar.
-!chamarBombeiro.
 !prenderIncendiario.
 
-+!andar <-
-	.wait(50)
-	caminharPolicial;
-	!andar.
-+!andar.
-
-+!chamarBombeiro <-
-	chamarBombeiro;
-	!chamarBombeiro.
-+!chamarBombeiro.
-
 +!prenderIncendiario <-
-	prenderIncendiario;
+	.wait(10)
+	caminharPolicial;
 	!prenderIncendiario.
 +!prenderIncendiario.
+
++policialFogo : true <- chamarBombeiro.
+
++policialIncendiario : true <- prenderIncendiario.
+
+

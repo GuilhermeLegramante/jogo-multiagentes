@@ -2,8 +2,6 @@
 //Civil
 
 !andar.
-!chamarBombeiro.
-!chamarPolicial.
 
 +!andar <-
 	.wait(100)
@@ -11,14 +9,11 @@
 	!andar.
 +!andar.
 
-+!chamarBombeiro <-
-	chamarBombeiro;
-	!chamarBombeiro.
-+!chamarBombeiro.
++civilFogo : true <-
+	chamarBombeiro.
 
-+!chamarPolicial <-
-	chamarPolicial;
-	!chamarPolicial.
-+!chamarPolicial.
++civilIncendiario : true <-
+	chamarPolicial.
+
 
 
