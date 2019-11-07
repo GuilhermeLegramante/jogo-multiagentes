@@ -109,7 +109,7 @@ public class MarsEnv extends Environment {
         updatePercepts();
 
         try {
-            Thread.sleep(50);
+            Thread.sleep(200);
         } catch (Exception e) {}
         informAgsEnvironmentChanged();
         return true;
@@ -320,8 +320,8 @@ public class MarsEnv extends Environment {
     class MarsView extends GridWorldView {
 
         public MarsView(MarsModel model) {
-            super(model, "Mars World", 800);
-            defaultFont = new Font("Verdana", Font.BOLD, 10); //alterar fonte padrão
+            super(model, "Simulação Multiagentes", 1000);
+            defaultFont = new Font("Serif", Font.PLAIN, 10); //alterar fonte padrão
             setVisible(true);
             repaint(); 
         }
@@ -341,8 +341,8 @@ public class MarsEnv extends Environment {
 			g.setColor(Color.white);
 			
 			if (id == 0) {
-				label = "Bombeiro";
-				c = Color.red;
+				c = Color.RED;
+				label = "BOMBEIRO";
 				g.setColor(Color.white);
 				super.drawAgent(g, x, y, c, -1);
 				super.drawString(g, x, y, defaultFont, label);
@@ -351,7 +351,7 @@ public class MarsEnv extends Environment {
 			
 			if (id == 1) {
 				c = Color.blue;
-				label = "Policial";
+				label = "POLICIAL";
 				g.setColor(Color.white);
 				super.drawAgent(g, x, y, c, -1);
 				super.drawString(g, x, y, defaultFont, label);
@@ -359,8 +359,8 @@ public class MarsEnv extends Environment {
             }
 			
 			if (id == 2) {
-				c = Color.black;
-				label = "Incendiário";
+				c = Color.DARK_GRAY;
+				label = "INCENDIÁRIO";
 				g.setColor(Color.white);
 				super.drawAgent(g, x, y, c, -1);
 				super.drawString(g, x, y, defaultFont, label);
@@ -368,27 +368,23 @@ public class MarsEnv extends Environment {
 			}
 			
 			if (id == 3) {
-				c = Color.green;
-				label = "Civil";
+				c = Color.CYAN;
+				label = "CIVIL";
 				g.setColor(Color.white);
 				super.drawAgent(g, x, y, c, -1);
 				super.drawString(g, x, y, defaultFont, label);
 				repaint();
             }         
 			super.drawAgent(g, x, y, c, -1);
-            if (id == 0) {
-                g.setColor(Color.black);
-            } else {
-                g.setColor(Color.white);
-            }
+            g.setColor(Color.white);
             super.drawString(g, x, y, defaultFont, label);
             repaint();
 		}
 		
         public void drawGarb(Graphics g, int x, int y) {
             super.drawObstacle(g, x, y);
-            g.setColor(Color.white);
-            drawString(g, x, y, defaultFont, "Fogo");
+            g.setColor(Color.orange);
+            drawString(g, x, y, defaultFont, "FOGO");
         }
 
     }

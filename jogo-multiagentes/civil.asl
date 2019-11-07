@@ -1,10 +1,12 @@
-//Civil
+
+//Civil
 
 !andar.
 !chamarBombeiro.
 !chamarPolicial.
 
 +!andar <-
+	.wait(100)
 	caminharCivil;
 	!andar.
 +!andar.

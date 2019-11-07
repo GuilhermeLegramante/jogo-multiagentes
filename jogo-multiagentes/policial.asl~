@@ -5,7 +5,6 @@
 !prenderIncendiario.
 
 +!andar <-
-	.wait(50)
 	caminharPolicial;
 	!andar.
 +!andar.

@@ -5,6 +5,7 @@
 !chamarPolicial.
 
 +!andar <-
+	.wait(50)
 	caminharBombeiro;
 	!andar.
 +!andar.
