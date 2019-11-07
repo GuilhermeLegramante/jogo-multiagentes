@@ -38,13 +38,13 @@ public class MarsEnv extends Environment {
 
     static Logger logger = Logger.getLogger(MarsEnv.class.getName());
 
-    private MarsModel model;
-    private MarsView  view;
+    private Model model;
+    private View  view;
 
     @Override
     public void init(String[] args) {
-        model = new MarsModel();
-        view  = new MarsView(model);
+        model = new Model();
+        view  = new View(model);
         model.setView(view);
         updatePercepts();
     }
@@ -115,7 +115,7 @@ public class MarsEnv extends Environment {
         return true;
     }
 
-    /** cria a percepção dos agentes com base no MarsModel */ 
+    /** cria a percepção dos agentes com base no Model */ 
     void updatePercepts() {
         clearPercepts();
 
@@ -146,7 +146,7 @@ public class MarsEnv extends Environment {
 				
     }
 
-    class MarsModel extends GridWorldModel {
+    class Model extends GridWorldModel {
 
         public static final int MErr = 2; // max error in pick garb
         int nerr; // number of tries of pick garb
@@ -154,7 +154,7 @@ public class MarsEnv extends Environment {
 
         Random random = new Random(System.currentTimeMillis());
 
-        private MarsModel() {
+        private Model() {
             super(GSize, GSize, 4);
 
             // localização inicial dos agentes
@@ -198,27 +198,35 @@ public class MarsEnv extends Environment {
 			if (bombeiro.y == getHeight()) {
 					bombeiro.y = 0;
 					bombeiro.x--;
-			}
-			
+			}			
 			setAgPos(0, bombeiro);
 			setAgPos(0, getAgPos(0)); // apenas para desenhá-lo na vista		
 		}
 
 		void caminharPolicial() throws Exception{
 			Location policial = getAgPos(1);
-			policial.x++;
+			Random n = new Random();
+			int direcao = n.nextInt(2);
+			
+			if(direcao == 0){
+				policial.x++;
+			}
+			
+			if(direcao == 1){
+				policial.y++;
+			}
 			
 			if (policial.x == getWidth()) {
 					policial.x = 0;
-					policial.y++;				
+					policial.y--;		
 			}
 			
-			if (policial.x == getHeight()) {
-					policial.y++;
-					return;
-			}
+			if (policial.y == getHeight()) {
+					policial.y = 0;
+					policial.x--;
+			}		
 			setAgPos(1, policial);
-			setAgPos(1, getAgPos(1)); // apenas para desenhá-lo na vista		
+			setAgPos(1, getAgPos(1)); // apenas para desenhá-lo na vista			
 		}
 
 		void caminharIncendiario() throws Exception{
@@ -269,8 +277,7 @@ public class MarsEnv extends Environment {
 			Random n = new Random();
 			if(n.nextInt(6) == 5){
 				add(GARB, getAgPos(2));
-			}
-			
+			}		
 		}
 		
 		void apagarFogo(){
@@ -317,9 +324,9 @@ public class MarsEnv extends Environment {
 		
     }
 
-    class MarsView extends GridWorldView {
+    class View extends GridWorldView {
 
-        public MarsView(MarsModel model) {
+        public View(Model model) {
             super(model, "Simulação Multiagentes", 1000);
             defaultFont = new Font("Serif", Font.PLAIN, 10); //alterar fonte padrão
             setVisible(true);
@@ -383,8 +390,10 @@ public class MarsEnv extends Environment {
 		
         public void drawGarb(Graphics g, int x, int y) {
             super.drawObstacle(g, x, y);
+			Font fonteFogo = new Font("Serif", Font.BOLD, 15); //alterar fonte padrão
             g.setColor(Color.orange);
-            drawString(g, x, y, defaultFont, "FOGO");
+			g.setFont(fonteFogo);
+            drawString(g, x, y, fonteFogo, "FOGO");
         }
 
     }
