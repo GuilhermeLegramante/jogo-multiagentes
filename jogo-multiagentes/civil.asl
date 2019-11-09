@@ -1,19 +1,27 @@
-
 //Civil
 
 !andar.
 
-+!andar <-
-	.wait(100)
-	caminharCivil;
++!andar
+	<- .wait(100) 
+		caminharCivil;
 	!andar.
 +!andar.
 
-+civilFogo : true <-
-	chamarBombeiro.
++civilIncendiario : true
+	<- !prenderIncendiario(civil).
+	
++!prenderIncendiario(civil)
+	<- .send(policial, achieve, prenderIncendiario(civil)).
 
-+civilIncendiario : true <-
-	chamarPolicial.
++civilFogo : true	
+	<- !apagarIncendio(civil).
+	
++!apagarIncendio(civil)
+	<- .send(bombeiro, achieve, apagarIncendio(civil)).
+	
+	
+
 
 
 

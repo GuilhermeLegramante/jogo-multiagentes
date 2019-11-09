@@ -17,18 +17,14 @@ public class MarsEnv extends Environment {
     public static final int GARB  = 16; // garbage code in grid model
 
 	//Movimento dos Agentes
-	public static final Term    caminharPolicial = Literal.parseLiteral("caminharPolicial");
 	public static final Term    caminharIncendiario = Literal.parseLiteral("caminharIncendiario");
 	public static final Term    caminharCivil = Literal.parseLiteral("caminharCivil");
-	public static final Term    caminharBombeiro = Literal.parseLiteral("caminharBombeiro");
-	
+
 	// Ações dos Agentes
     public static final Term    atearFogo = Literal.parseLiteral("atearFogo");
 	public static final Term	apagarFogo = Literal.parseLiteral("apagarFogo");
 	public static final Term	prenderIncendiario = Literal.parseLiteral("prenderIncendiario");
-	public static final Term	chamarPolicial = Literal.parseLiteral("chamarPolicial");
-	public static final Term	chamarBombeiro = Literal.parseLiteral("chamarBombeiro");
-	
+
 	// Percepções dos Agentes
 	public static final Literal civilFogo = Literal.parseLiteral("civilFogo");
 	public static final Literal policialFogo = Literal.parseLiteral("policialFogo");
@@ -55,18 +51,20 @@ public class MarsEnv extends Environment {
         logger.info(ag+" fazendo: "+ action);
         try {
             
-			if (action.equals(caminharPolicial)){
-				model.caminharPolicial();
-			}
-			else if (action.equals(caminharIncendiario)) {
-                model.caminharIncendiario();
-			}
-			else if (action.equals(caminharCivil)) {
+			if (action.equals(caminharCivil)) {
                 model.caminharCivil();
-			}
-			else if (action.equals(caminharBombeiro)) {
-                model.caminharBombeiro();
-			}			
+			} else if (action.getFunctor().equals("perseguirIncendiario")) {
+                int x = (int)((NumberTerm)action.getTerm(0)).solve();
+                int y = (int)((NumberTerm)action.getTerm(1)).solve();
+                model.perseguirIncendiario(x,y);
+			} else if (action.getFunctor().equals("apagarIncendio")) {
+                int x = (int)((NumberTerm)action.getTerm(0)).solve();
+                int y = (int)((NumberTerm)action.getTerm(1)).solve();
+                model.apagarIncendio(x,y);
+				
+			}else if (action.equals(caminharIncendiario)) {
+                model.caminharIncendiario();
+			}	
 			else if (action.equals(atearFogo)) {
                 model.atearFogo();
 			}
@@ -75,30 +73,6 @@ public class MarsEnv extends Environment {
             } 
 			else if (action.equals(prenderIncendiario)) {
                 model.prenderIncendiario();
-			}
-			else if (action.equals(chamarPolicial)) {
-                model.chamarPolicial();
-			}
-			else if (action.equals(chamarBombeiro)) {
-                model.chamarBombeiro();
-			}
-			else if (action.equals(civilFogo)) {
-                model.civilFogo();
-            } 
-			else if (action.equals(policialFogo)) {
-                model.policialFogo();
-			}
-			else if (action.equals(bombeiroFogo)) {
-                model.bombeiroFogo();
-			}
-			else if (action.equals(civilIncendiario)) {
-                model.civilIncendiario();
-			}
-			else if (action.equals(policialIncendiario)) {
-                model.policialIncendiario();
-			}
-			else if (action.equals(bombeiroIncendiario)) {
-                model.bombeiroIncendiario();
 			}
 			else {
                 return false;
@@ -119,7 +93,8 @@ public class MarsEnv extends Environment {
     /** cria a percepção dos agentes com base no Model */ 
     void updatePercepts() {
         clearPercepts();
-
+		
+		//Recebendo a localização dos Agentes
         Location bombeiroLoc = model.getAgPos(0);
         Location policialLoc = model.getAgPos(1);
 		Location incendiarioLoc = model.getAgPos(2);
@@ -129,12 +104,14 @@ public class MarsEnv extends Environment {
         Literal posicaoPolicial = Literal.parseLiteral("pos(policial," + policialLoc.x + "," + policialLoc.y + ")");
 		Literal posicaoIncendiario = Literal.parseLiteral("pos(incendiario," + incendiarioLoc.x + "," + incendiarioLoc.y + ")");
 		Literal posicaoCivil = Literal.parseLiteral("pos(civil," + civilLoc.x + "," + civilLoc.y + ")");
-
+		
+		//Adicionando percepções da localização dos Agentes
         addPercept(posicaoBombeiro);
         addPercept(posicaoPolicial);
 		addPercept(posicaoIncendiario);
 		addPercept(posicaoCivil);
-				
+		
+		//Adicionando percepções de Agentes percebendo Fogo		
         if (model.hasObject(GARB, civilLoc)) {
             addPercept(civilFogo);
         }
@@ -145,6 +122,13 @@ public class MarsEnv extends Environment {
             addPercept(bombeiroFogo);
         }
 		
+		//Adicionando percepções de Agentes percebendo Incendiário
+		if((civilLoc.x == incendiarioLoc.x) && (civilLoc.y == incendiarioLoc.y)){
+			addPercept(civilIncendiario);
+		}
+		if((bombeiroLoc.x == incendiarioLoc.x) && (bombeiroLoc.y == incendiarioLoc.y)){
+			addPercept(bombeiroIncendiario);
+		}
 		if ((policialLoc.x == incendiarioLoc.x) && (policialLoc.y == incendiarioLoc.y)){
 			addPercept(policialIncendiario);
 		}
@@ -162,18 +146,18 @@ public class MarsEnv extends Environment {
         private Model() {
             super(GSize, GSize, 4);
 
-            // localização inicial dos agentes
+            //Localização inicial dos Agentes
             try {
-				Location bombeiroLoc = new Location(0, 1);
+				Location bombeiroLoc = new Location(14, 14);
 				setAgPos(0, bombeiroLoc);
 								
-                Location policialLoc = new Location(10, 6);
+                Location policialLoc = new Location(13, 14);
                 setAgPos(1, policialLoc);
 				
-				Location incendiarioLoc = new Location(0, 3);
+				Location incendiarioLoc = new Location(6, 1);
                 setAgPos(2, incendiarioLoc);
 				
-				Location civilLoc = new Location(0, 4);
+				Location civilLoc = new Location(1, 1);
 				setAgPos(3, civilLoc);
 				
             } catch (Exception e) {
@@ -182,59 +166,6 @@ public class MarsEnv extends Environment {
 
         }
 		
-		void caminharBombeiro() throws Exception{
-			Location bombeiro = getAgPos(0);
-			Random n = new Random();
-			int direcao = n.nextInt(2);
-			
-			if(direcao == 0){
-				bombeiro.x++;
-			}
-			
-			if(direcao == 1){
-				bombeiro.y++;
-			}
-			
-			if (bombeiro.x == getWidth()) {
-					bombeiro.x = 0;
-					bombeiro.y--;		
-			}
-			
-			if (bombeiro.y == getHeight()) {
-					bombeiro.y = 0;
-					bombeiro.x--;
-			}			
-			setAgPos(0, bombeiro);
-			setAgPos(0, getAgPos(0)); // apenas para desenhá-lo na vista		
-		}
-
-		void caminharPolicial() throws Exception{
-			Location policial = getAgPos(1);
-			Location incendiario = getAgPos(2);
-			Random n = new Random();
-			int direcao = n.nextInt(2);
-			
-			if(direcao == 0){
-				policial.x++;
-			}
-			
-			if(direcao == 1){
-				policial.y++;
-			}
-			
-			if (policial.x == getWidth()) {
-					policial.x = 0;
-					policial.y--;		
-			}
-			
-			if (policial.y == getHeight()) {
-					policial.y = 0;
-					policial.x--;
-			}	
-			setAgPos(1, policial);
-			setAgPos(1, getAgPos(1)); // apenas para desenhá-lo na vista			
-		}
-
 		void caminharIncendiario() throws Exception{
 			Location incendiario = getAgPos(2);
 			Random n = new Random();
@@ -278,59 +209,50 @@ public class MarsEnv extends Environment {
 			setAgPos(3, getAgPos(3)); // apenas para desenhá-lo na vista		
 		}
 		
-		void atearFogo(){
-			System.out.println("Ateou Fogo!");
+		void atearFogo()throws Exception{
 			Random n = new Random();
-			if(n.nextInt(6) == 5){
+			if(n.nextInt(15) == 5){
 				add(GARB, getAgPos(2));
 			}		
 		}
 		
-		void apagarFogo(){
-			System.out.println("Apagou Fogo!");
+		void apagarFogo()throws Exception{
 			remove(GARB, getAgPos(0));
 		}
 
 		void prenderIncendiario()throws Exception{
-			System.out.println("Prendeu o Incendiário!");
 			JOptionPane.showMessageDialog(null, "INCENDIÁRIO CAPTURADO!!");
-			model.remove(GARB, getAgPos(2));
 			System.exit(0);
 		}
-		
-		void chamarPolicial(){
-			System.out.println("Chamou o Policial!");
-		}
+			
+		void perseguirIncendiario(int x, int y) throws Exception {
+            Location policial = getAgPos(1);
+            if (policial.x < x)
+                policial.x++;
+            else if (policial.x > x)
+                policial.x--;
+            if (policial.y < y)
+                policial.y++;
+            else if (policial.y > y)
+                policial.y--;
+            setAgPos(1, policial);
+            setAgPos(1, getAgPos(1)); // just to draw it in the view
+        }
 
-		void chamarBombeiro(){
-			System.out.println("Chamou o Bombeiro!");
-		}
-		
-		void civilFogo(){
-			System.out.println("Civil percebeu fogo!");
-		}
-		
-		void policialFogo(){
-			System.out.println("Policial percebeu fogo!");
-		}
-		
-		void bombeiroFogo(){
-			System.out.println("Bombeiro percebeu fogo!");
-		}
-
-		void civilIncendiario(){
-			System.out.println("Civil percebeu incendiário!");
-		}
-
-		void policialIncendiario()throws Exception{	
-			System.out.println("Policial percebeu incendiário!");
-		}
-
-		void bombeiroIncendiario(){
-			System.out.println("Bombeiro percebeu incendiário!");
-		}
-		
-		
+		void apagarIncendio(int x, int y) throws Exception {
+            Location bombeiro = getAgPos(0);
+            if (bombeiro.x < x)
+                bombeiro.x++;
+            else if (bombeiro.x > x)
+                bombeiro.x--;
+            if (bombeiro.y < y)
+                bombeiro.y++;
+            else if (bombeiro.y > y)
+                bombeiro.y--;
+            setAgPos(0, bombeiro);
+            setAgPos(0, getAgPos(0)); // just to draw it in the view
+        }		
+	
     }
 
     class View extends GridWorldView {
@@ -346,7 +268,7 @@ public class MarsEnv extends Environment {
         public void draw(Graphics g, int x, int y, int object) {
             switch (object) {
             case MarsEnv.GARB:
-                drawGarb(g, x, y);
+                drawFogo(g, x, y);
                 break;
             }
         }
@@ -397,7 +319,7 @@ public class MarsEnv extends Environment {
             repaint();
 		}
 		
-        public void drawGarb(Graphics g, int x, int y) {
+        public void drawFogo(Graphics g, int x, int y) {
             super.drawObstacle(g, x, y);
 			Font fonteFogo = new Font("Serif", Font.BOLD, 15); //alterar fonte padrão
             g.setColor(Color.orange);

@@ -1,15 +1,24 @@
 // Policial 
 
-!prenderIncendiario.
++!prenderIncendiario(civil)
+	<- ?pos(incendiario,X,Y);
+	perseguirIncendiario(X,Y);
+	!prenderIncendiario(civil).
++!prenderIncendiario(civil).
 
-+!prenderIncendiario <-
-	.wait(10)
-	caminharPolicial;
-	!prenderIncendiario.
-+!prenderIncendiario.
++!prenderIncendiario(bombeiro)
+	<- ?pos(incendiario,X,Y);
+	perseguirIncendiario(X,Y);
+	!prenderIncendiario(bombeiro).
++!prenderIncendiario(bombeiro).
 
-+policialFogo : true <- chamarBombeiro.
++policialFogo : true	
+	<- !apagarIncendio(policial).
+	
++!apagarIncendio(policial)
+	<- .send(bombeiro, achieve, apagarIncendio(policial)).
 
-+policialIncendiario : true <- prenderIncendiario.
++policialIncendiario : true
+	<- prenderIncendiario.
 
 

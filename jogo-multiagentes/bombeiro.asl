@@ -1,21 +1,29 @@
 //Bombeiro
 
-!andar.
-!apagarIncendioCivil.
-!apagarIncendioBombeiro.
-!apagarIncendioPolicial.
++!apagarIncendio(civil)
+	<- ?pos(civil,X,Y);
+	apagarIncendio(X,Y);
+	!apagarIncendio(civil).
++!apagarIncendio(civil).
 
-+!andar <-
-	.wait(50)
-	caminharBombeiro;
-	!andar.
-+!andar.
++!apagarIncendio(policial)
+	<- ?pos(policial,X,Y);
+	apagarIncendio(X,Y);
+	!apagarIncendio(policial).
++!apagarIncendio(policial).
 
-+!apagarIncendioBombeiro <-
-	apagarFogo;
-	!apagarIncendioBombeiro.
-+!apagarIncendioBombeiro.
++!bombeiroFogo
+	<- apagarFogo;
+	!bombeiroFogo.
++!bombeiroFogo.
 
-+bombeiroIncendiario : true <- chamarPolicia.
++bombeiroFogo : true <- apagarFogo.
+
++bombeiroIncendiario : true
+	<- !prenderIncendiario(bombeiro).
+	
++!prenderIncendiario(bombeiro)
+	<- .send(policial, achieve, prenderIncendiario(bombeiro)).
+
 
 
